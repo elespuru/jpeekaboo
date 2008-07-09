@@ -48,6 +48,7 @@ class MouseMoveListener implements MouseListener, MouseMotionListener {
 
     public void mouseDragged(MouseEvent e) {
         System.out.println("mouseDragged");
+        System.exit(0);
     }
 
     public void mouseMoved(MouseEvent e) {

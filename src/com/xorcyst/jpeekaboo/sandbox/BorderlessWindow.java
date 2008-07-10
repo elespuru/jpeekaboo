@@ -18,11 +18,16 @@ import javax.swing.SwingUtilities;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.Point;
 
-class MouseMoveListener implements MouseListener, MouseMotionListener {
+class BorderlessMouseMoveListener implements MouseListener, MouseMotionListener {
+    Component parent;
     Component target;
     
-    public MouseMoveListener(Component target) {
+    static final int width = 300;
+    
+    public BorderlessMouseMoveListener(Component parent, Component target) {
+        this.parent = parent;
         this.target = target;
     }
     
@@ -32,10 +37,26 @@ class MouseMoveListener implements MouseListener, MouseMotionListener {
 
     public void mouseEntered(MouseEvent e) {
         System.out.println("mouseEntered");
+        parent.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width-width, parent.getLocationOnScreen().y);
     }
 
     public void mouseExited(MouseEvent e) {
         System.out.println("mouseExited");
+        
+        int psx = parent.getLocationOnScreen().x;
+        int psy = parent.getLocationOnScreen().y;
+        int psw = parent.getSize().width;
+        int psh = parent.getSize().height;
+        int msx = e.getLocationOnScreen().x;
+        int msy = e.getLocationOnScreen().y;
+        
+        if( msx > psx && msx < (psx+psw) && msy > psy && msy < (psy+psh) ) {
+            System.out.println("psx: "+psx+" psy: "+psy+" psw: "+psw+" psh: "+psh+" msx: "+msx+" msy: "+msy);
+            return;
+        }
+        
+        parent.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width-3,parent.getLocationOnScreen().y);
+        System.out.println("triggered exit");
     }
 
     public void mousePressed(MouseEvent e) {
@@ -48,7 +69,20 @@ class MouseMoveListener implements MouseListener, MouseMotionListener {
 
     public void mouseDragged(MouseEvent e) {
         System.out.println("mouseDragged");
-        System.exit(0);
+        return;
+/*
+        Point screenLocation = e.getLocationOnScreen();
+        Point mouseLocation = e.getPoint();
+
+        Point newLocation = 
+            new Point(screenLocation.x-((parent.getWidth()/2)),screenLocation.y-((parent.getHeight()/2)));
+
+        System.out.println("sx: "+screenLocation.x+" sy: "+screenLocation.y);
+        System.out.println("mx: "+mouseLocation.x+" my: "+mouseLocation.y);
+        System.out.println("nx: "+newLocation.x+" ny: "+newLocation.y);
+
+        parent.setLocation(newLocation);
+*/
     }
 
     public void mouseMoved(MouseEvent e) {
@@ -70,6 +104,9 @@ public class BorderlessWindow extends JWindow {
     }
 
     public static void main(String[] args) {
+        
+        final int width = 300;
+        final int buffer = 100;
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -80,13 +117,13 @@ public class BorderlessWindow extends JWindow {
                 window.setFocusable(true);
                 window.setEnabled(true);
                 window.setFocusableWindowState(true);
-                window.setSize(640, 480);
-                int xCenter = ((screenSize.width - window.getWidth()) / 2);
-                int yCenter = ((screenSize.height - window.getHeight()) / 2);
-                window.setLocation(xCenter, yCenter);
+                window.setSize(width, screenSize.height-buffer);
+                int x = (screenSize.width-width);
+                int y = (buffer/2);
+                window.setLocation(x, y);
 
                 JTextArea note = new JTextArea();
-                MouseMoveListener mml = new MouseMoveListener(note);
+                BorderlessMouseMoveListener mml = new BorderlessMouseMoveListener(window, note);
                 note.addMouseListener(mml);
                 note.addMouseMotionListener(mml);
                 note.setEditable(true);

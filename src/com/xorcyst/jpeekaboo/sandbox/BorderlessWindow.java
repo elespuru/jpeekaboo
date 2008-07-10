@@ -50,7 +50,7 @@ class BorderlessMouseMoveListener implements MouseListener, MouseMotionListener 
         int msx = e.getLocationOnScreen().x;
         int msy = e.getLocationOnScreen().y;
         
-        if( msx > psx && msx < (psx+psw) && msy > psy && msy < (psy+psh) ) {
+        if( msx > psx && msx < (psx+psw) && msy > psy && msy < (psy+psh-3) ) {
             System.out.println("psx: "+psx+" psy: "+psy+" psw: "+psw+" psh: "+psh+" msx: "+msx+" msy: "+msy);
             return;
         }

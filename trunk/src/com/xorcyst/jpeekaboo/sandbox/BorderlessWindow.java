@@ -6,6 +6,19 @@ package com.xorcyst.jpeekaboo.sandbox;
 //
 //
 
+//
+// menubar/taskbar icon with settings options
+//   color chooser
+//   font chooser
+//   sync settings
+//
+// exit program saves content of note
+//
+// add hold ctrl to resize and move
+//   if near edge resize that edge
+//   if move, pin to first edge it touches
+//
+
 import java.awt.BorderLayout;
 import javax.swing.JWindow;
 import javax.swing.JFrame;

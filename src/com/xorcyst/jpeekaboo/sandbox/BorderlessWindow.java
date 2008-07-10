@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import javax.swing.JWindow;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+import javax.swing.text.PlainDocument;
 import javax.swing.JScrollPane;
 import java.awt.Toolkit;
 import java.awt.Component;
@@ -122,7 +123,7 @@ public class BorderlessWindow extends JWindow {
                 int y = (buffer/2);
                 window.setLocation(x, y);
 
-                JTextArea note = new JTextArea();
+                JTextArea note = new JTextArea(new PlainDocument());
                 BorderlessMouseMoveListener mml = new BorderlessMouseMoveListener(window, note);
                 note.addMouseListener(mml);
                 note.addMouseMotionListener(mml);
@@ -130,8 +131,7 @@ public class BorderlessWindow extends JWindow {
                 note.setEnabled(true);
                 note.setLineWrap(true);
                 note.setWrapStyleWord(true);
-                note.setText("abcdefghijklmnopqrstuvwxyz");
-
+                
                 JScrollPane noteScrollPane = new JScrollPane(note);
                 noteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
                 noteScrollPane.setPreferredSize(new Dimension(250, 250));

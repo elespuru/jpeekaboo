@@ -3,36 +3,110 @@ package com.xorcyst.jpeekaboo.sandbox;
 //
 //
 // play time to prototype the notes stuff
+// this will be a garbled mess of code that
+// will later be broken out and cleaned up
+// to provide the final deal
 //
 //
 
 //
-// menubar/taskbar icon with settings options
-//   color chooser
-//   font chooser
-//   sync settings
+// TDL
+// * persistence of note (indi of offsite sync)
+// * single instance of the application at any one time, use persistence
+// * sync offsite, saves local, syncs to remote
+// * better icon for taskbar
+// * test taskbar on osx and linux
+// * pinning
+// * settings (font, color)
+// * add width resizing, adjusts for pinning
+// * add height adjustment, stays centered though
+//menubar/taskbar icon with settings options
+//color chooser
+//font chooser
+//sync settings
+//exit program saves content of note
 //
-// exit program saves content of note
-//
-// add hold ctrl to resize and move
-//   if near edge resize that edge
-//   if move, pin to first edge it touches
-//
+//add hold ctrl to resize and move
+//if near edge resize that edge
+//if move, pin to first edge it touches
 
-import java.awt.BorderLayout;
-import javax.swing.JWindow;
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.text.PlainDocument;
-import javax.swing.JScrollPane;
-import java.awt.Toolkit;
-import java.awt.Component;
-import java.awt.Dimension;
-import javax.swing.SwingUtilities;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.Point;
+/*
+
+import java.io.*;
+import java.nio.channels.*;
+
+public class UniqueApp
+{
+private String appName;
+private File file;
+private FileChannel channel;
+private FileLock lock;
+
+public UniqueApp(String appName) {
+this.appName = appName;
+}
+
+public boolean isAppActive() {
+try {
+file = new File(System.getProperty("user.home"), appName + ".tmp");
+channel = new RandomAccessFile(file, "rw").getChannel();
+
+try {
+lock = channel.tryLock();
+}
+catch (OverlappingFileLockException e) {
+closeLock();
+return true;
+}
+
+if (lock == null) {
+closeLock();
+return true;
+}
+
+Runtime.getRuntime().addShutdownHook(new Thread() {
+public void run() {
+closeLock();
+deleteFile();
+}
+});
+
+return false;
+}
+catch (Exception e) {
+closeLock();
+return true;
+}
+}
+
+private void closeLock() {
+try {
+lock.release();
+}
+catch (Exception e) {
+}
+try {
+channel.close();
+}
+catch (Exception e) {
+}
+}
+
+private void deleteFile() {
+try {
+file.delete();
+}
+catch (Exception e) {
+}
+}
+}
+
+ */
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import javax.swing.text.*;
 
 class BorderlessMouseMoveListener implements MouseListener, MouseMotionListener {
     Component parent;
@@ -83,8 +157,11 @@ class BorderlessMouseMoveListener implements MouseListener, MouseMotionListener 
 
     public void mouseDragged(MouseEvent e) {
         System.out.println("mouseDragged");
-        return;
-/*
+        
+        if ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != InputEvent.CTRL_DOWN_MASK) {
+            return;
+        }
+        
         Point screenLocation = e.getLocationOnScreen();
         Point mouseLocation = e.getPoint();
 
@@ -96,7 +173,6 @@ class BorderlessMouseMoveListener implements MouseListener, MouseMotionListener 
         System.out.println("nx: "+newLocation.x+" ny: "+newLocation.y);
 
         parent.setLocation(newLocation);
-*/
     }
 
     public void mouseMoved(MouseEvent e) {
@@ -135,6 +211,8 @@ public class BorderlessWindow extends JWindow {
                 int x = (screenSize.width-width);
                 int y = (buffer/2);
                 window.setLocation(x, y);
+                window.setAlwaysOnTop(true);
+                window.setBackground(new Color(255,255,153));
 
                 JTextArea note = new JTextArea(new PlainDocument());
                 BorderlessMouseMoveListener mml = new BorderlessMouseMoveListener(window, note);
@@ -144,6 +222,7 @@ public class BorderlessWindow extends JWindow {
                 note.setEnabled(true);
                 note.setLineWrap(true);
                 note.setWrapStyleWord(true);
+                note.setBackground(new Color(255,255,153));
                 
                 JScrollPane noteScrollPane = new JScrollPane(note);
                 noteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -151,6 +230,59 @@ public class BorderlessWindow extends JWindow {
                 window.getContentPane().add(noteScrollPane, BorderLayout.CENTER);
 
                 window.setVisible(true);
+                
+                final TrayIcon trayIcon;
+                if (SystemTray.isSupported()) {
+
+                    SystemTray tray = SystemTray.getSystemTray();
+                    Image image = Toolkit.getDefaultToolkit().getImage("tray.gif");
+
+                    ActionListener exitListener = new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("Exiting...");
+                            System.exit(0);
+                        }
+                    };
+                            
+                    PopupMenu popup = new PopupMenu();
+                    popup.add(new MenuItem("Settings"));
+                    popup.add(new MenuItem("Synchronize offsite"));
+                    popup.add(new MenuItem(""));
+                    MenuItem defaultItem = new MenuItem("Exit");
+                    defaultItem.addActionListener(exitListener);
+                    popup.add(defaultItem);
+
+                    trayIcon = new TrayIcon(image, "jpeekaboo", popup);
+
+                    ActionListener actionListener = new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            trayIcon.displayMessage("Action Event", 
+                                "An Action Event Has Been Performed!",
+                                TrayIcon.MessageType.INFO);
+                        }
+                    };
+                            
+                    trayIcon.setImageAutoSize(true);
+                    trayIcon.addActionListener(actionListener);
+                    
+                    try {
+                        tray.add(trayIcon);
+
+                        trayIcon.displayMessage("Finished loading", 
+                                "Your Java application has finished loading",
+                                TrayIcon.MessageType.INFO);
+
+                    } catch (AWTException e) {
+                        System.err.println("TrayIcon could not be added.");
+                    }
+
+                } else {
+
+                    // throw up a popup saying not supported, sorry
+                    //  System Tray is not supported
+
+                }
+                
             }
         });
     }

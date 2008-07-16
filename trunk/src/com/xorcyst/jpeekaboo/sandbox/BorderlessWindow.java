@@ -9,103 +9,11 @@ package com.xorcyst.jpeekaboo.sandbox;
 //
 //
 
-//
-// TDL
-// * persistence of note (indi of offsite sync)
-// * single instance of the application at any one time, use persistence
-// * sync offsite, saves local, syncs to remote
-// * better icon for taskbar
-// * test taskbar on osx and linux
-// * pinning
-// * settings (font, color)
-// * add width resizing, adjusts for pinning
-// * add height adjustment, stays centered though
-//menubar/taskbar icon with settings options
-//color chooser
-//font chooser
-//sync settings
-//exit program saves content of note
-//
-//add hold ctrl to resize and move
-//if near edge resize that edge
-//if move, pin to first edge it touches
-
-/*
-
-import java.io.*;
-import java.nio.channels.*;
-
-public class UniqueApp
-{
-private String appName;
-private File file;
-private FileChannel channel;
-private FileLock lock;
-
-public UniqueApp(String appName) {
-this.appName = appName;
-}
-
-public boolean isAppActive() {
-try {
-file = new File(System.getProperty("user.home"), appName + ".tmp");
-channel = new RandomAccessFile(file, "rw").getChannel();
-
-try {
-lock = channel.tryLock();
-}
-catch (OverlappingFileLockException e) {
-closeLock();
-return true;
-}
-
-if (lock == null) {
-closeLock();
-return true;
-}
-
-Runtime.getRuntime().addShutdownHook(new Thread() {
-public void run() {
-closeLock();
-deleteFile();
-}
-});
-
-return false;
-}
-catch (Exception e) {
-closeLock();
-return true;
-}
-}
-
-private void closeLock() {
-try {
-lock.release();
-}
-catch (Exception e) {
-}
-try {
-channel.close();
-}
-catch (Exception e) {
-}
-}
-
-private void deleteFile() {
-try {
-file.delete();
-}
-catch (Exception e) {
-}
-}
-}
-
- */
 
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+
 import javax.swing.text.*;
 
 class BorderlessMouseMoveListener implements MouseListener, MouseMotionListener {
@@ -191,9 +99,21 @@ public class BorderlessWindow extends JWindow {
                 return true;
             }
         });
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                // add save to file and sync to remote
+            }
+        });
     }
 
     public static void main(String[] args) {
+        
+        StateLock state = new StateLock("jpeekaboo");
+        if( state.isAppActive() ) {
+            //TODO: add a popup here saying there's already one running
+            return;
+        }
         
         final int width = 300;
         final int buffer = 100;
@@ -235,11 +155,10 @@ public class BorderlessWindow extends JWindow {
                 if (SystemTray.isSupported()) {
 
                     SystemTray tray = SystemTray.getSystemTray();
-                    Image image = Toolkit.getDefaultToolkit().getImage("tray.gif");
+                    Image image = Toolkit.getDefaultToolkit().getImage("tray.png");
 
                     ActionListener exitListener = new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            System.out.println("Exiting...");
                             System.exit(0);
                         }
                     };
@@ -251,26 +170,17 @@ public class BorderlessWindow extends JWindow {
                     MenuItem defaultItem = new MenuItem("Exit");
                     defaultItem.addActionListener(exitListener);
                     popup.add(defaultItem);
-
                     trayIcon = new TrayIcon(image, "jpeekaboo", popup);
-
-                    ActionListener actionListener = new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            trayIcon.displayMessage("Action Event", 
-                                "An Action Event Has Been Performed!",
-                                TrayIcon.MessageType.INFO);
-                        }
-                    };
-                            
                     trayIcon.setImageAutoSize(true);
-                    trayIcon.addActionListener(actionListener);
                     
                     try {
                         tray.add(trayIcon);
 
+                        /*
                         trayIcon.displayMessage("Finished loading", 
                                 "Your Java application has finished loading",
                                 TrayIcon.MessageType.INFO);
+                                */
 
                     } catch (AWTException e) {
                         System.err.println("TrayIcon could not be added.");

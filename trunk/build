@@ -1,0 +1,6 @@
+#!/bin/bash
+
+dir='/sluga/dev/jpeekaboo'
+code=`find ${dir}/src -name "*.java"`
+echo "javac -cp ${dir}/classes -d ${dir}/classes ${code}"
+javac -cp ${dir}/classes -d ${dir}/classes ${code}

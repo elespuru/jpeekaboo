@@ -1,9 +1,7 @@
 package com.xorcyst.jpeekaboo.ui;
 
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 
 public class TaskbarMenu extends PopupMenu {
 
@@ -26,7 +24,9 @@ public class TaskbarMenu extends PopupMenu {
     }
 
     private void addExit() {
+
         MenuItem exitItem = new MenuItem("Exit");
+
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);

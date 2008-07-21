@@ -1,14 +1,8 @@
 package com.xorcyst.jpeekaboo.event;
 
 import com.xorcyst.jpeekaboo.core.*;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.*;
+import java.awt.event.*;
 
 public class NoteMouseListener implements MouseListener, MouseMotionListener {
     Component        _parent;

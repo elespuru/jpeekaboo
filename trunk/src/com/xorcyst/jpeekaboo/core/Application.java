@@ -1,13 +1,7 @@
 package com.xorcyst.jpeekaboo.core;
 
-import java.awt.AWTException;
-import java.awt.Image;
-import java.awt.SystemTray;
-import java.awt.Toolkit;
-import java.awt.TrayIcon;
-
-import com.xorcyst.jpeekaboo.ui.BorderlessWindow;
-import com.xorcyst.jpeekaboo.ui.TaskbarMenu;
+import java.awt.*;
+import com.xorcyst.jpeekaboo.ui.*;
 
 public class Application {
 

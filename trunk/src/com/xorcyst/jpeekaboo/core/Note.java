@@ -1,14 +1,10 @@
 package com.xorcyst.jpeekaboo.core;
 
-import com.xorcyst.jpeekaboo.event.NoteMouseListener;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JWindow;
-import javax.swing.text.PlainDocument;
+import com.xorcyst.jpeekaboo.event.*;
+import java.awt.*;
+import javax.swing.*;
+import java.io.*;
+import javax.swing.text.*;
 
 public class Note {
 
@@ -48,6 +44,14 @@ public class Note {
         _noteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         _noteScrollPane.setPreferredSize(new Dimension(250, 250));
         ((JWindow)_parent).getContentPane().add(_noteScrollPane, BorderLayout.CENTER);
+
+		restoreContent();
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+				saveContent();
+            }
+        });
     }
     
     public static void toggleHiding() {
@@ -57,4 +61,40 @@ public class Note {
     public static boolean isHidingEnabled() {
         return(_hiding_enabled);
     }
+
+	private void restoreContent() {
+		
+		try {
+        	File saveFile = new File(System.getProperty("user.home"), ".jpeekaboo" + ".save" );
+			BufferedReader input = new BufferedReader(new FileReader(saveFile));
+			StringBuffer restore = new StringBuffer();
+		
+			while( true ) {
+				String line = input.readLine();
+				if( line == null ) { break; }
+				restore.append(line);
+				restore.append("\n");
+			}
+		
+			_note.setText(restore.toString());
+			input.close();
+		} catch (FileNotFoundException fnfx) {
+			//TODO: add a popup to taskbar for unable to open file
+		} catch (IOException iox) {
+		}
+	}
+
+	private void saveContent() {
+		
+		try {
+        	File saveFile = new File(System.getProperty("user.home"), ".jpeekaboo" + ".save" );
+			BufferedWriter output = new BufferedWriter(new FileWriter(saveFile));
+			output.write(_note.getText());
+			output.flush();
+			output.close();
+		} catch(FileNotFoundException fnfx) {
+			//TODO: add a popup to taskbar for unable save content
+		} catch(IOException iox) {
+		}
+	}
 }

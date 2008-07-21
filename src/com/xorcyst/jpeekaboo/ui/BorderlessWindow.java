@@ -1,10 +1,7 @@
 package com.xorcyst.jpeekaboo.ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import javax.swing.JFrame;
-import javax.swing.JWindow;
+import java.awt.*;
+import javax.swing.*;
 
 public class BorderlessWindow extends JWindow {
 
@@ -24,6 +21,7 @@ public class BorderlessWindow extends JWindow {
     }
 
     private void initializeSelf() {
+
         final int width = 300;
         final int buffer = 100;
 

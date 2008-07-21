@@ -1,0 +1,25 @@
+V1
+* add width resizing, adjusts for pinning, must hold ctrl to perform
+* add height resizing, stays centered though, must hold ctrl to perform
+* persistence of note, save state locally on exit
+* add additional triggers and content to menu items
+** about 
+** help (shows keys)
+* change cursor to resize when in resize region and pushing ctrl
+
+* test taskbar on osx and linux
+* cleanup
+** use logging instead of system.out.println
+** popups etc
+** fix imports to use wildcards instead of exact class
+* doc
+* web page
+
+V2
+* settings
+** pinning
+** color chooser
+** font chooser
+** sync settings
+* sync offsite, saves local, syncs to remote
+

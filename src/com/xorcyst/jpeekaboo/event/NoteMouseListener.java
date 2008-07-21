@@ -86,6 +86,10 @@ public class NoteMouseListener implements MouseListener, MouseMotionListener {
     public void mouseDragged(MouseEvent e) {
         System.out.println("mouseDragged");
 
+        if ( !Note.isHidingEnabled() ) {
+            return;
+        }
+        
         // only respond to drag events if CTRL is pressed too
         if ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != InputEvent.CTRL_DOWN_MASK) {
             return;

@@ -122,7 +122,7 @@ public class NoteMouseListener implements MouseListener, MouseMotionListener {
     }
     
     private void resizeTop(MouseEvent e) {
-        Point screenLocation = e.getLocationOnScreen();
+        //Point screenLocation = e.getLocationOnScreen();
         
         int y = 0;
         int height = 0;

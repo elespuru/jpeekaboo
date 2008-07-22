@@ -16,11 +16,27 @@ public class TaskbarMenu extends PopupMenu {
     }
 
     private void addHelp() {
-        this.add(new MenuItem("Help"));
+        MenuItem helpItem = new MenuItem("Help");
+        
+        helpItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                HelpDialog.getInstance().setVisible(true);
+            }
+        });
+
+        this.add(helpItem);
     }
     
     private void addAbout() {
-        this.add(new MenuItem("About"));
+        MenuItem aboutItem = new MenuItem("About");
+        
+        aboutItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                AboutDialog.getInstance().setVisible(true);
+            }
+        });
+
+        this.add(aboutItem);
     }
 
     private void addExit() {

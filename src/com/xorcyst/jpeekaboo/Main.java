@@ -1,7 +1,6 @@
 package com.xorcyst.jpeekaboo;
 
 import javax.swing.*;
-import com.xorcyst.jpeekaboo.ui.*;
 import com.xorcyst.jpeekaboo.core.*;
 import com.xorcyst.jpeekaboo.persistence.*;
 

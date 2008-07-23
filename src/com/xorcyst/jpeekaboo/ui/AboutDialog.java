@@ -1,17 +1,46 @@
+// jpeekaboo - auto hide note thing
+// Copyright 2008 by Peter R. Elespuru
+// All Rights Reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+
 package com.xorcyst.jpeekaboo.ui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.text.*;
 
+/**
+ * The AboutDialog class provides what the name suggests, a dialog box
+ * that displays information about the application.
+ * 
+ * To avoid multiple dialogs, it implements the singleton design pattern
+ */
 public class AboutDialog extends JDialog {
 
     private static final long serialVersionUID = -8773180054993490155L;
     private static final int _width = 250;
     private static final int _height = 150;
     private static AboutDialog _instance = null;
+    private static final String _about = "jpeekaboo\nhttp://jpeekaboo.xorcyst.com\nCopyright 2008 Peter R. Elespuru\nemail: peter@xorcyst.com";
     
+    /**
+     * @return the one and only instance of this dialog (instantiates if necessary)
+     */
     public static AboutDialog getInstance() {
         if (_instance == null){
             _instance = new AboutDialog(new JFrame());
@@ -20,20 +49,27 @@ public class AboutDialog extends JDialog {
         return(_instance);
     }
 
+    /**
+     * private constructor to create the dialog
+     * @param parent - the component to which the dialog is associated
+     */
     private AboutDialog(JFrame parent) {
         
-        super(parent, "About jpeekaboo", true);
+        super(parent, "About", true);
 
         Box b = Box.createVerticalBox();
         b.add(Box.createGlue());
-        b.add(new JLabel("jpeekaboo - jpeekaboo.xorcyst.com"));
-        b.add(new JLabel("Copyright 2008 Peter R. Elespuru"));
-        b.add(new JLabel("email: peter@xorcyst.com"));
+        JTextPane content = new JTextPane();
+        content.setText(_about);
+        SimpleAttributeSet attributes = new SimpleAttributeSet();
+        StyleConstants.setAlignment(attributes, StyleConstants.ALIGN_CENTER);
+        content.getStyledDocument().setParagraphAttributes(0,content.getText().length(), attributes, true);
+        b.add(content);
         b.add(Box.createGlue());
         getContentPane().add(b, "Center");
 
         JPanel p2 = new JPanel();
-        JButton ok = new JButton("Ok");
+        JButton ok = new JButton("Close");
         p2.add(ok);
         getContentPane().add(p2, "South");
 
@@ -48,6 +84,5 @@ public class AboutDialog extends JDialog {
         int x = ((screenSize.width/2) - (_width/2));
         int y = ((screenSize.height/2) - (_height/2));
         this.setLocation(x, y);
-    }
-    
+    }    
 }

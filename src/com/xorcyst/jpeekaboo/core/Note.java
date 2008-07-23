@@ -1,3 +1,22 @@
+// jpeekaboo - auto hide note thing
+// Copyright 2008 by Peter R. Elespuru
+// All Rights Reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+
 package com.xorcyst.jpeekaboo.core;
 
 import com.xorcyst.jpeekaboo.event.*;
@@ -6,30 +25,57 @@ import javax.swing.*;
 import java.io.*;
 import javax.swing.text.*;
 
+/**
+ * The Note class deals with persistence of the note's content, initializing its
+ * components and generally modularizes hiding operations
+ */
 public class Note {
 
+    // what is the note housed in
     private Component _parent;
+    
+    // actual content area of the application
     private JTextArea _note;
+    
+    // so logical content can be larger than physical window
     private JScrollPane _noteScrollPane;
+    
+    // how events will be monitored and responded to
     private NoteMouseListener _mouseListener;
-    private static final long serialVersionUID = -3113393354034915899L;
+    
+    // should I hide or should I go now
     private static boolean _hiding_enabled = true;
 
+    private static final long serialVersionUID = -3113393354034915899L;
+
+    /**
+     * default constructor, that does not initialize anything
+     * assumes the caller knows what to do
+     */
     public Note() {
-        // does nothing, implies invoker knows
-        // what to do next
     }
     
+    /**
+     * Constructor that initializes based on a given parent component
+     * @param parent - the parent component in which this component lives
+     */
     public Note(Component parent) {
         _parent = parent;
         initializeSelf();
     }
     
+    /**
+     * set the parent to the given component
+     * @param parent - the parent component in which this component lives
+     */
     public void setParent(Component parent) {
         _parent = parent;
         initializeSelf();
     }
     
+    /**
+     * modularizes the setup bits
+     */
     private void initializeSelf() {
         _note = new JTextArea(new PlainDocument());
         _mouseListener = new NoteMouseListener(_parent, _note);
@@ -61,7 +107,11 @@ public class Note {
     public static boolean isHidingEnabled() {
         return(_hiding_enabled);
     }
-
+    
+    /**
+     * restores the previous content of the note from the last time it was
+     * exited.
+     */
 	private void restoreContent() {
 		
 		try {
@@ -84,6 +134,10 @@ public class Note {
 		}
 	}
 
+	/**
+	 * stores the current content of the note so it can be restored
+	 * on next start
+	 */
 	private void saveContent() {
 		
 		try {

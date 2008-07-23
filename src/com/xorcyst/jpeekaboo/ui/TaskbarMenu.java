@@ -1,12 +1,38 @@
+// jpeekaboo - auto hide note thing
+// Copyright 2008 by Peter R. Elespuru
+// All Rights Reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+
 package com.xorcyst.jpeekaboo.ui;
 
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * The TaskbarMenu class provides all of the click targets
+ * for the taskbar. e.g. About, Help, etc...
+ */
 public class TaskbarMenu extends PopupMenu {
 
     private static final long serialVersionUID = 6815348601297451742L;
 
+    /**
+     * Default constructor
+     */
     public TaskbarMenu() {
         super();
         addAbout();
@@ -15,6 +41,9 @@ public class TaskbarMenu extends PopupMenu {
         addExit();
     }
 
+    /**
+     * modularized helper for adding the help menu and associated trigger
+     */
     private void addHelp() {
         MenuItem helpItem = new MenuItem("Help");
         
@@ -27,6 +56,9 @@ public class TaskbarMenu extends PopupMenu {
         this.add(helpItem);
     }
     
+    /**
+     * modularized helper for adding the about menu and associated trigger
+     */
     private void addAbout() {
         MenuItem aboutItem = new MenuItem("About");
         
@@ -39,6 +71,9 @@ public class TaskbarMenu extends PopupMenu {
         this.add(aboutItem);
     }
 
+    /**
+     * modularized helper for adding the exit menu and associated trigger
+     */
     private void addExit() {
 
         MenuItem exitItem = new MenuItem("Exit");
@@ -52,6 +87,9 @@ public class TaskbarMenu extends PopupMenu {
         this.add(exitItem);
     }
 
+    /**
+     * modularized helper for adding filler to the menu
+     */
     private void addFiller() {
         this.add(new MenuItem(""));
     }

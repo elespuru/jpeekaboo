@@ -1,16 +1,11 @@
 V1
-* spruce up dialog content (maybe use something other than labels....
-** get single dialog working (singleton ?!?)
-* add width resizing, adjusts for pinning, must hold ctrl to perform
-* add height resizing, stays centered though, must hold ctrl to perform
-* change cursor to resize when in resize region and pushing ctrl
-* test taskbar on osx and linux
-* cleanup
-** use logging instead of system.out.println
-** popups etc
-** fix imports to use wildcards instead of exact class
-* doc
-* web page
+
+* cross plat testing
+* create web page
+* create installer
+* ant build file ?!?
+
+---
 
 V2
 * settings
@@ -18,5 +13,22 @@ V2
 ** color chooser
 ** font chooser
 ** sync settings
+** remember width
+
 * sync offsite, saves local, syncs to remote
 
+* resizing
+** corners
+** width
+*** right side triggered
+** add height resizing, stays centered though, must hold ctrl to perform
+*** top triggered
+*** bottom triggered
+
+* external strings for prog name etc.
+
+* cleanup
+** refactor dialogs, lots of duplication at present
+** popups for failures (exception handling!)
+
+* internationalization

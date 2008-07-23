@@ -1,3 +1,22 @@
+// jpeekaboo - auto hide note thing
+// Copyright 2008 by Peter R. Elespuru
+// All Rights Reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+
 package com.xorcyst.jpeekaboo.event;
 
 import com.xorcyst.jpeekaboo.core.*;
@@ -5,25 +24,31 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class NoteMouseListener implements MouseListener, MouseMotionListener {
-    Component        _parent;
-    Component        _target;
+    private Component _parent;
+    private Component _target;
+    private static final int _initial_width = 300;
+    private static final int _resize_buffer = 10;
+    private static final int _not_resizing = 0;
+    private static final int _top_resizing = 1;
+    private static final int _bottom_resizing = 2;
+    private static final int _left_resizing = 3;
+    private static final int _right_resizing = 4;
+    private static int _screen_x;
+    private static int _screen_y;
+    private static boolean _resizing = false;
 
-    static final int _initial_width = 300;
-    static final int _resize_buffer = 10;
-
-    static final int _not_resizing = 0;
-    static final int _top_resizing = 1;
-    static final int _bottom_resizing = 2;
-    static final int _left_resizing = 3;
-    static final int _right_resizing = 4;
-
+    /**
+     * constructor that initializes based on a given child and parent component
+     * @param parent - the enclosing component (window)
+     * @param target - the inner component (note)
+     */
     public NoteMouseListener(Component parent, Component target) {
         this._parent = parent;
         this._target = target;
+        _screen_x = Toolkit.getDefaultToolkit().getScreenSize().width - _initial_width;
     }
 
     public void mouseClicked(MouseEvent e) {
-        System.out.println("mouseClicked");
         
         //if they're holding down ctrl, ignore the request
         if ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != InputEvent.CTRL_DOWN_MASK) {
@@ -33,22 +58,19 @@ public class NoteMouseListener implements MouseListener, MouseMotionListener {
         //if they've double clicked
         if ( e.getClickCount() == 2 ) {
             Note.toggleHiding();
-            System.out.println("toggled hiding");
         }
     }
 
     public void mouseEntered(MouseEvent e) {
-        System.out.println("mouseEntered");
         
         if ( !Note.isHidingEnabled() ) {
             return;
         }
         
-        _parent.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width - _initial_width, _parent.getLocationOnScreen().y);
+        _parent.setLocation(_screen_x, _parent.getLocationOnScreen().y);
     }
 
     public void mouseExited(MouseEvent e) {
-        System.out.println("mouseExited");
 
         if ( !Note.isHidingEnabled() ) {
             return;
@@ -67,39 +89,21 @@ public class NoteMouseListener implements MouseListener, MouseMotionListener {
         int msy = e.getLocationOnScreen().y;
 
         if (msx > psx && msx < (psx + psw) && msy > psy && msy < (psy + psh - 3)) {
-            System.out.println("psx: " + psx + " psy: " + psy + " psw: " + psw + " psh: " + psh + " msx: " + msx + " msy: " + msy);
             return;
         }
 
         _parent.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width - 3, _parent.getLocationOnScreen().y);
-        System.out.println("triggered exit");
     }
 
     public void mousePressed(MouseEvent e) {
-        System.out.println("mousePressed");
     }
 
     public void mouseReleased(MouseEvent e) {
-        System.out.println("mouseReleased");
     }
 
     public void mouseDragged(MouseEvent e) {
-        System.out.println("mouseDragged");
 
-        if ( !Note.isHidingEnabled() ) {
-            return;
-        }
-        
-        // only respond to drag events if CTRL is pressed too
-        if ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != InputEvent.CTRL_DOWN_MASK) {
-            return;
-        }
-
-        Point screenLocation = e.getLocationOnScreen();
-        Point mouseLocation = e.getPoint();
-
-        System.out.println("sx: " + screenLocation.x + " sy: " + screenLocation.y);
-        System.out.println("mx: " + mouseLocation.x + " my: " + mouseLocation.y);
+        if ( !shouldResize(e) ) { return; }
 
         int resizeRegion = inResizeRegion(e);
         
@@ -122,64 +126,95 @@ public class NoteMouseListener implements MouseListener, MouseMotionListener {
     }
     
     private void resizeTop(MouseEvent e) {
-        //Point screenLocation = e.getLocationOnScreen();
-        
-        int y = 0;
-        int height = 0;
-        Point newLocation = new Point(_parent.getLocation().x, y);
-        _parent.setSize(_parent.getWidth(), height);
-        _parent.setLocation(newLocation);
     }
     
     private void resizeBottom(MouseEvent e) {
-        Point screenLocation = e.getLocationOnScreen();
-        _parent.setSize(_parent.getWidth(), screenLocation.y);
     }
     
+    /**
+     * method that resizes the note based on dragging the left 
+     * edge
+     * @param e - mouse event to use for determining how resize should occur
+     */
     private void resizeLeft(MouseEvent e) {
+        _resizing = true;
         Point screenLocation = e.getLocationOnScreen();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
-        int x = screenLocation.x;
-        int width = screenSize.width - screenLocation.y;
-        Point newLocation = new Point(x, _parent.getLocation().y);
-        _parent.setSize(width, _parent.getHeight());
+        _screen_x = screenLocation.x;
+        int width = screenSize.width - screenLocation.x;
+        _screen_y = _parent.getLocationOnScreen().y;
+        Point newLocation = new Point(_screen_x, _screen_y);
         _parent.setLocation(newLocation);
+        _parent.setSize(width, _parent.getHeight());
+        _resizing = false;
     }
     
     private void resizeRight(MouseEvent e) {
-        
     }
     
+    /**
+     * helper method that checks a few parameters to determine if a resize
+     * should be allowed or not
+     * @param e - mouse event to use for determining these things
+     * @return true if resize should be allowed, false otherwise
+     */
+    private boolean shouldResize(MouseEvent e) {
+        if ( !_resizing && Note.isHidingEnabled() ) {
+            return false;
+        }
+        
+        // only respond to drag events if CTRL is pressed too
+        if ( !_resizing && (e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != InputEvent.CTRL_DOWN_MASK) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * helper method to determine if the mouse is in the resize region as defined by this application
+     * @param e - mouse event to use for determining location
+     * @return an integer value 
+     */
     private int inResizeRegion( MouseEvent e ) {
         Point mouseLocation = e.getPoint();
 
-        // do I have a hit in any resizing region ?!?
-        //
         // top
         if ( mouseLocation.y >= 0 && mouseLocation.y <= _resize_buffer ) {
+            //_target.setCursor(new Cursor(Cursor.N_RESIZE_CURSOR)); //removed until this is supported, don't want to confuse
             return(_top_resizing);
         }
         // left
-        else if ( mouseLocation.x >= 0 && mouseLocation.x <= _resize_buffer ) {
+        else if ( mouseLocation.x <= _resize_buffer ) {
+            _target.setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
             return(_left_resizing);
         }
         // right
         else if( mouseLocation.x >= (_target.getWidth() - _resize_buffer) && mouseLocation.x <= _target.getWidth() ) {
+            // _target.setCursor(new Cursor(Cursor.E_RESIZE_CURSOR)); //removed until this is supported, don't want to confuse
             return(_right_resizing);
         }
         // bottom
         else if ( mouseLocation.y > (_target.getHeight() - _resize_buffer) && mouseLocation.y < _target.getHeight()) {
+            //_target.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR)); //removed until this is supported, don't want to confuse
             return(_bottom_resizing);
         }
         // nothing matched, not in a resize region
         else {
+            _target.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             return(_not_resizing);
         }
     }
 
     public void mouseMoved(MouseEvent e) {
-        System.out.println("mouseMoved");
+        
+        if ( !shouldResize(e) ) { 
+            _target.setCursor(new Cursor(Cursor.DEFAULT_CURSOR)); //just to be sure it gets restored correctly...
+            return; 
+        }
+
+        inResizeRegion(e);
     }
 
 }

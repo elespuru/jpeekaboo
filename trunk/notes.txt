@@ -1,21 +1,22 @@
-V1
+V1 - DONE!
 
 * cross plat testing
+** linux
+** osx 
 * create web page
-* create installer
-* ant build file ?!?
 
 ---
 
 V2
+
+* sync offsite, saves local, syncs to remote
+
 * settings
+** sync settings
 ** pinning
 ** color chooser
 ** font chooser
-** sync settings
 ** remember width
-
-* sync offsite, saves local, syncs to remote
 
 * resizing
 ** corners

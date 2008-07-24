@@ -211,6 +211,9 @@
 
         <delete dir="${build.dist}/${name}.app"/>
     </target>
+    
+    <target name="dist" depends="dist-osx,dist-linux,installer-windows">
+    </target>
 	
 </project>
 

@@ -49,7 +49,7 @@
         classname="com.loomcom.ant.tasks.jarbundler.JarBundler"
     />
 
-    <taskdef name="dmgcreator"
+    <taskdef name="dmg"
         classpath="${basedir}/lib/osxant.jar"
         classname="com.amberarcher.ant.osx.DmgTask"
     />	
@@ -152,10 +152,12 @@
         </exec>
     </target>
 
+    <!-- MUST BE BUILT ON WINDOWS -->	
     <target name="dist-windows" depends="jar">
 		<launch4j configFile="${basedir}/jpeekaboo-l4j.xml" />	
 	</target>
 
+    <!-- MUST BE BUILT ON WINDOWS -->	
     <target name="installer-jar-windows" depends="dist-windows">
         <IzPack input="${basedir}/windows-installer.xml"
                 output="${build.dist}/${name}-installer.jar"
@@ -164,6 +166,7 @@
                 basedir="${basedir}" />
     </target>
     	
+    <!-- MUST BE BUILT ON WINDOWS -->	
     <target name="installer-windows" depends="installer-jar-windows">
         <launch4j configFile="${basedir}/installer-l4j.xml" />  
     </target>
@@ -185,7 +188,8 @@
 
     	<delete dir="${build.staging}"/>
     </target>
-	
+
+    <!-- MUST BE BUILT ON OSX -->	
     <target name="dist-osx" depends="jar">
         <delete dir="${build.dist}/${name}.app"/>
 
@@ -194,6 +198,8 @@
             dir="${build.dist}"
             verbose="true"
             name="${name}"
+            infostring="${jpeekaboo} 1.0, Copyright 2008 Peter R. Elespuru"
+            icon="${resources}/tray.icns"
             mainclass="com.xorcyst.${name}.Main"
             aboutmenuname="${name}"
             jvmversion="1.6+"
@@ -204,7 +210,7 @@
             growboxintrudes="false"
         />
 
-        <dmg destfile="${build.dist}/${dmgfile}"
+        <dmg destfile="${build.dist}/${name}.dmg"
             name="${name}"
             compressed="true"
             srcdir="${build.dist}/${name}.app"/>

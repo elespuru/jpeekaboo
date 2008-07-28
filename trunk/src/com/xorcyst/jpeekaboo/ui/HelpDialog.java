@@ -37,12 +37,12 @@ public class HelpDialog extends JDialog {
     private static final int _width = 400;
     private static final int _height = 400;
     private static HelpDialog _instance = null;
-    private static final String _help = "jpeekaboo Help\n\n>>> To disable hiding, hold down control and double click anywhere in the note\n\n>>> To resize the note, first disable hiding, then hold down control and drag an edge (your mouse icon will change when you're able to resize)";
+    private static final String _help = "jpeekaboo Help\n\n>>> To disable hiding, hold down control and double click anywhere in the note\n\n>>> To resize the note, first disable hiding, then hold down control and drag an edge with your mouse (your mouse cursor will change when you're at an edge where you'll be able to resize)";
     
     /**
      * @return the one and only instance of this dialog (instantiate if necessary)
      */
-    public static HelpDialog getInstance() {
+    public synchronized static HelpDialog getInstance() {
         if (_instance == null){
             _instance = new HelpDialog(new JFrame());
         }

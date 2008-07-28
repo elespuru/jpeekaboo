@@ -52,6 +52,7 @@ public class Note {
      * assumes the caller knows what to do
      */
     public Note() {
+        startBackgroundContentSaver();
     }
     
     /**
@@ -59,6 +60,7 @@ public class Note {
      * @param parent - the parent component in which this component lives
      */
     public Note(Component parent) {
+        super();
         _parent = parent;
         initializeSelf();
     }
@@ -77,7 +79,7 @@ public class Note {
      */
     private void initializeSelf() {
         _note = new JTextArea(new PlainDocument());
-        _mouseListener = new NoteMouseListener(_parent, _note);
+        _mouseListener = new NoteMouseListener(_parent, _note, this);
         _note.addMouseListener(_mouseListener);
         _note.addMouseMotionListener(_mouseListener);
         _note.setEditable(true);
@@ -106,10 +108,35 @@ public class Note {
     public static boolean isHidingEnabled() {
         return(_hiding_enabled);
     }
+
+    /**
+     * fires up a thread in the background to save the note's
+     * content to disk every so often just to be sure it stays
+     * current
+     */
+    private void startBackgroundContentSaver() {
+        Thread t = new Thread() {
+            public void run(){
+                while(true) {
+                    try {
+                        long sleepDuration = (1000) * (60); //sleep for a minute, sleep call takes millis
+                        Thread.sleep(sleepDuration);
+                        saveContent();
+                    } catch (InterruptedException ignore) {
+                        // just move on to the next iteration,
+                        // don't care that we were interrupted
+                    }
+                }
+            }
+        };
+        
+        t.start();
+    }
     
     /**
      * restores the previous content of the note from the last time it was
-     * exited.
+     * exited. this method is private intentionally, to prevent other external
+     * foo from nuking existing content. only this class has that ability.
      */
 	private void restoreContent() {
 		
@@ -135,10 +162,10 @@ public class Note {
 
 	/**
 	 * stores the current content of the note so it can be restored
-	 * on next start
+	 * on next start. anybody should be able to initiate a save to disk.
 	 */
-	private void saveContent() {
-		
+	public void saveContent() {
+	    
 		try {
         	File saveFile = new File(System.getProperty("user.home"), ".jpeekaboo" + ".save" );
 			BufferedWriter output = new BufferedWriter(new FileWriter(saveFile));

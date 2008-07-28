@@ -40,7 +40,7 @@ public class AboutDialog extends JDialog {
     /**
      * @return the one and only instance of this dialog (instantiates if necessary)
      */
-    public static AboutDialog getInstance() {
+    public synchronized static AboutDialog getInstance() {
         if (_instance == null){
             _instance = new AboutDialog(new JFrame());
         }

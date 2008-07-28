@@ -19,6 +19,7 @@
 
 <project name="jpeekaboo" default="all" basedir=".">
 
+	<property name="version" value="1.0.1" />
     <property name="name" value="jpeekaboo" />
     <property name="src" value="src" />
 	<property name="resources" value="resources" />
@@ -198,7 +199,7 @@
             dir="${build.dist}"
             verbose="true"
             name="${name}"
-            infostring="${jpeekaboo} 1.0, Copyright 2008 Peter R. Elespuru"
+            infostring="${jpeekaboo} ${version}, Copyright 2008 Peter R. Elespuru"
             icon="${resources}/tray.icns"
             mainclass="com.xorcyst.${name}.Main"
             aboutmenuname="${name}"

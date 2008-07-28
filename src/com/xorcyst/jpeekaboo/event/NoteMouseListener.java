@@ -23,6 +23,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class NoteMouseListener implements MouseListener, MouseMotionListener {
+    private Note _note;
     private Component _parent;
     private Component _target;
     private static final int _initial_width = 300;
@@ -41,7 +42,8 @@ public class NoteMouseListener implements MouseListener, MouseMotionListener {
      * @param parent - the enclosing component (window)
      * @param target - the inner component (note)
      */
-    public NoteMouseListener(Component parent, Component target) {
+    public NoteMouseListener(Component parent, Component target, Note note) {
+        this._note = note;
         this._parent = parent;
         this._target = target;
         _screen_x = Toolkit.getDefaultToolkit().getScreenSize().width - _initial_width;
@@ -92,6 +94,10 @@ public class NoteMouseListener implements MouseListener, MouseMotionListener {
         }
 
         _parent.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width - 3, _parent.getLocationOnScreen().y);
+        
+        // keep in mind that the note also saves to disk on a timer
+        // but this will ensure edits are always synced too...
+        _note.saveContent();
     }
 
     public void mousePressed(MouseEvent e) {

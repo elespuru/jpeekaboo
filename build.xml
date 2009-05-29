@@ -60,7 +60,7 @@
 
     <!-- The default target should always be a safe operation! -->
     <target name="info" >
-		<echo message="Please invoke ant with an appropriate target. Review the build.xml file to determine what's available"/>
+		<echo message="Please invoke ant with an appropriate target. (ant -p will list them)"/>
 	</target>
 
     <target name="all" depends="clean,javadoc,jar">

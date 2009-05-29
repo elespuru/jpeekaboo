@@ -68,7 +68,11 @@ public class NoteMouseListener implements MouseListener, MouseMotionListener {
             return;
         }
         
-        _parent.setLocation(_screen_x, _parent.getLocationOnScreen().y);
+        if (Settings.get("pinRight").equals("true")) {
+        	_parent.setLocation(_screen_x, _parent.getLocationOnScreen().y);
+        } else {
+        	_parent.setLocation(0, _parent.getLocationOnScreen().y);
+        }
     }
 
     public void mouseExited(MouseEvent e) {
@@ -89,11 +93,28 @@ public class NoteMouseListener implements MouseListener, MouseMotionListener {
         int msx = e.getLocationOnScreen().x;
         int msy = e.getLocationOnScreen().y;
 
-        if (msx > psx && msx < (psx + psw) && msy > psy && msy < (psy + psh - 3)) {
-            return;
-        }
+        int x,y;
+        if(Settings.get("pinRight").equals("true")) {
+            if (msx > psx && msx < (psx + psw) && msy > psy && msy < (psy + psh - 3)) {
+                //System.out.println("pinRight -- psx:"+psx+", psy:"+psy+", psw:"+psw+", psh:"+psh+", msx:"+msx+", msy:"+msy);
+                return;
+            }
 
-        _parent.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width - 3, _parent.getLocationOnScreen().y);
+        	x = Toolkit.getDefaultToolkit().getScreenSize().width - 3;
+            y = _parent.getLocationOnScreen().y;
+            
+        } else {
+            if (msx+2 < (psx+psw) && msy > psy && msy < (psy + psh - 3)) {
+            	//System.out.println("pinLeft -- psx:"+psx+", psy:"+psy+", psw:"+psw+", psh:"+psh+", msx:"+msx+", msy:"+msy);
+                return;
+            }
+
+        	x = (-_parent.getSize().width)+5;
+            y = _parent.getLocationOnScreen().y;
+            
+        }
+        
+    	_parent.setLocation(x, y);
         
         // keep in mind that the note also saves to disk on a timer
         // but this will ensure edits are always synced too...
@@ -156,6 +177,7 @@ public class NoteMouseListener implements MouseListener, MouseMotionListener {
     }
     
     private void resizeRight(MouseEvent e) {
+    	//TBD
     }
     
     /**

@@ -28,6 +28,7 @@ public class BorderlessWindow extends JWindow {
 
     private static JFrame _frame;
     private static final long serialVersionUID = 8515365993272218057L;
+	private static BorderlessWindow _self;
 
     /**
      * default constructor
@@ -44,6 +45,27 @@ public class BorderlessWindow extends JWindow {
 
         initializeSelf();
     }
+
+	/**
+	 *
+	 */
+	public static void updateHeight(int percentage) {
+		
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		float percent = (float)((float)percentage / 100.0f);
+		float buffer = screenSize.height - (screenSize.height * percent);
+		
+		System.out.println("buffer "+(int)buffer);
+		
+        _self.setSize(_frame.getWidth(), screenSize.height - (int)buffer);
+        int x = _self.getX();
+        int y = ((int)buffer / 2);
+
+		System.out.println("setting position to "+x+","+y);
+ 
+        _self.set(x, y);
+		_self.repaint();
+	}
 
     /**
      * helper method to modularize initialization code out a bit
@@ -68,6 +90,7 @@ public class BorderlessWindow extends JWindow {
         this.setLocation(x, y);
         startOnTopper();
         _frame.setVisible(true);
+		_self = this;
     }
     
     /**

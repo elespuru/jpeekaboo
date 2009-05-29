@@ -34,10 +34,26 @@ public class TaskbarMenu extends PopupMenu {
      */
     public TaskbarMenu() {
         super();
+		addSettings();
         addAbout();
         addHelp();
         addFiller();
         addExit();
+    }
+
+    /**
+     * modularized helper for adding the settings menu and associated trigger
+     */
+    private void addSettings() {
+        MenuItem settingsItem = new MenuItem("Settings");
+        
+        settingsItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SettingsDialog.getInstance().setVisible(true);
+            }
+        });
+
+        this.add(settingsItem);
     }
 
     /**

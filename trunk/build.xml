@@ -17,7 +17,7 @@
 //
 -->
 
-<project name="jpeekaboo" default="all" basedir=".">
+<project name="jpeekaboo" default="info" basedir=".">
 
 	<property name="version" value="1.0.1" />
     <property name="name" value="jpeekaboo" />
@@ -57,6 +57,11 @@
 	
 	<taskdef name="IzPack" classpath="${basedir}/lib/standalone-compiler.jar"
 	         classname="com.izforge.izpack.ant.IzPackTask"/>
+
+    <!-- The default target should always be a safe operation! -->
+    <target name="info" >
+		<echo message="Please invoke ant with an appropriate target. Review the build.xml file to determine what's available"/>
+	</target>
 
     <target name="all" depends="clean,javadoc,jar">
     </target>

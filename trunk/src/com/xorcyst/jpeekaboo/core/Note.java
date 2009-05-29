@@ -34,7 +34,7 @@ public class Note {
     private Component _parent;
     
     // actual content area of the application
-    private JTextArea _note;
+    private JEditorPane _note;
     
     // so logical content can be larger than physical window
     private JScrollPane _noteScrollPane;
@@ -78,14 +78,12 @@ public class Note {
      * modularizes the setup bits
      */
     private void initializeSelf() {
-        _note = new JTextArea(new PlainDocument());
+        _note = new JEditorPane();
         _mouseListener = new NoteMouseListener(_parent, _note, this);
         _note.addMouseListener(_mouseListener);
         _note.addMouseMotionListener(_mouseListener);
         _note.setEditable(true);
         _note.setEnabled(true);
-        _note.setLineWrap(true);
-        _note.setWrapStyleWord(true);
         _note.setBackground(new Color(255,255,153));
         _noteScrollPane = new JScrollPane(_note);
         _noteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);

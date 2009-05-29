@@ -69,7 +69,8 @@ class BorderlessMouseMoveListener implements MouseListener, MouseMotionListener 
             return;
         }
         
-        parent.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width-3,parent.getLocationOnScreen().y);
+//        parent.setLocation(Toolkit.getDefaultToolkit().getScreenSize().width-3,parent.getLocationOnScreen().y);
+        parent.setLocation(3,parent.getLocationOnScreen().y);
         System.out.println("triggered exit");
     }
 

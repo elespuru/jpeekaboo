@@ -19,32 +19,41 @@
 package com.xorcyst.jpeekaboo.core;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 //
 // Ideally this should store an xml config file or similar, or perhaps
 // go so far as to bundle HSQLDB/Derby/whatever and provide config via
 // embedded db. I'm sure there's an appropriate design pattern for this too...
+// and I don't want to use properties files.
 //
 
 public class Settings {
 	
-    private static Settings _instance = null;
-	private HashMap<String, String> _settings;
+	private static final ConcurrentHashMap<String, String> _settings = new ConcurrentHashMap<String, String>();
     
-    /**
-     * @return the one and only instance (instantiates if necessary)
-     */
-    public synchronized static Settings getInstance() {
-        if (_instance == null){
-            _instance = new Settings();
-        }
-        
-        return(_instance);
+	//
+	// initial/default settings 
+	// 
+	static {
+		_settings.put("pinLeft","false");
+		_settings.put("pinRight","true");
+		_settings.put("verticalPercentage","60");
+	}
+	
+	/**
+	 * @param name
+	 * @return
+	 */
+    public static String get(String name) {
+    	return(_settings.get(name));
     }
 
     /**
+     * @param name
+     * @param value
      */
-    private Settings() {
-        _settings = new HashMap<String, String>();
+    public static void put(String name, String value) {
+    	_settings.put(name, value);
     }
 }

@@ -20,6 +20,7 @@ package com.xorcyst.jpeekaboo.ui;
 
 import java.awt.*;
 import javax.swing.*;
+import com.xorcyst.jpeekaboo.core.*;
 
 /**
  * The BorderlessWindow class implements a decoration-less JWindow
@@ -29,6 +30,7 @@ public class BorderlessWindow extends JWindow {
     private static JFrame _frame;
     private static final long serialVersionUID = 8515365993272218057L;
 	private static BorderlessWindow _self;
+	private static final int _width = 300;
 
     /**
      * default constructor
@@ -47,7 +49,8 @@ public class BorderlessWindow extends JWindow {
     }
 
 	/**
-	 *
+	 * updates the height of the borderless window
+	 * @param percentage the integer percentage of the screen vertical to utilize e.g. 80 => 80%
 	 */
 	public static void updateHeight(int percentage) {
 		
@@ -55,15 +58,11 @@ public class BorderlessWindow extends JWindow {
 		float percent = (float)((float)percentage / 100.0f);
 		float buffer = screenSize.height - (screenSize.height * percent);
 		
-		System.out.println("buffer "+(int)buffer);
-		
-        _self.setSize(_frame.getWidth(), screenSize.height - (int)buffer);
+        _self.setSize(_width, screenSize.height - (int)buffer);
         int x = _self.getX();
         int y = ((int)buffer / 2);
 
-		System.out.println("setting position to "+x+","+y);
- 
-        _self.set(x, y);
+        _self.setLocation(x, y);
 		_self.repaint();
 	}
 
@@ -72,10 +71,11 @@ public class BorderlessWindow extends JWindow {
      */
     private void initializeSelf() {
 
-        final int width = 300;
-        final int buffer = 100;
-
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        float percentage = Float.valueOf(Settings.get("verticalPercentage"));
+        float percent = (float)(percentage / 100.0f);
+		int buffer = (int)(screenSize.height - (screenSize.height * percent));
+
         _frame.setUndecorated(true);
         _frame.setTitle("jpeekaboo");
         _frame.setAlwaysOnTop(true);
@@ -84,8 +84,8 @@ public class BorderlessWindow extends JWindow {
         this.setFocusable(true);
         this.setEnabled(true);
         this.setFocusableWindowState(true);
-        this.setSize(width, screenSize.height - buffer);
-        int x = (screenSize.width - width);
+        this.setSize(_width, screenSize.height - buffer);
+        int x = (screenSize.width - _width);
         int y = (buffer / 2);
         this.setLocation(x, y);
         startOnTopper();

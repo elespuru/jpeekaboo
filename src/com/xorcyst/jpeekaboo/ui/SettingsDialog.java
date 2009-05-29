@@ -24,6 +24,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
 import java.util.*;
+import com.xorcyst.jpeekaboo.core.*;
 
 public class SettingsDialog extends JDialog {
 
@@ -64,11 +65,15 @@ public class SettingsDialog extends JDialog {
 		
 		pinLeft.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent evt) {
+        		Settings.put("pinLeft","true");
+        		Settings.put("pinRight","false");
           	}
         });
 
 		pinRight.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent evt) {
+        		Settings.put("pinLeft","false");
+        		Settings.put("pinRight","true");
           	}
         });
 
@@ -78,7 +83,8 @@ public class SettingsDialog extends JDialog {
         b.add(Box.createVerticalGlue());
 
 		//vertical percentage of screen to use 0-100%
-		final JSlider verticalPercentage = new JSlider(JSlider.HORIZONTAL,0,100,80); 
+        int defaultVertPerc = Integer.valueOf(Settings.get("verticalPercentage"));
+		final JSlider verticalPercentage = new JSlider(JSlider.HORIZONTAL,0,100,defaultVertPerc);
 		verticalPercentage.setMajorTickSpacing(20);
 		verticalPercentage.setPaintTicks(true);
 		Hashtable<Integer, JLabel> labels = new Hashtable<Integer,JLabel>();
@@ -93,6 +99,7 @@ public class SettingsDialog extends JDialog {
 		
 		verticalPercentage.addChangeListener(new ChangeListener() {
 			public final void stateChanged(ChangeEvent e) {
+				Settings.put("verticalPercentage",String.valueOf((int)verticalPercentage.getValue()));
 				BorderlessWindow.updateHeight((int)verticalPercentage.getValue());
 			}
 		});

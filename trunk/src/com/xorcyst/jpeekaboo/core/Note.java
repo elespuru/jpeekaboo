@@ -86,7 +86,8 @@ public class Note {
         _note.setEnabled(true);
         _note.setBackground(new Color(255,255,153));
         _noteScrollPane = new JScrollPane(_note);
-        _noteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        _noteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        _noteScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         _noteScrollPane.setPreferredSize(new Dimension(250, 250));
         ((JWindow)_parent).getContentPane().add(_noteScrollPane, BorderLayout.CENTER);
 

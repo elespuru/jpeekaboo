@@ -65,8 +65,40 @@ public class BorderlessWindow extends JWindow {
         _self.setLocation(x, y);
 		_self.repaint();
 	}
+	
+	public static void pinLeft() {
+		Settings.put("pinLeft","true");
+		Settings.put("pinRight","false");
+		
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        float percentage = Float.valueOf(Settings.get("verticalPercentage"));
+        float percent = (float)(percentage / 100.0f);
+		int buffer = (int)(screenSize.height - (screenSize.height * percent));
+		
+		int x = 0;
+        int y = (buffer / 2);
 
-    /**
+        _self.setLocation(x, y);
+        _self.repaint();
+	}
+
+	public static void pinRight() {
+		Settings.put("pinLeft","false");
+		Settings.put("pinRight","true");
+		
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        float percentage = Float.valueOf(Settings.get("verticalPercentage"));
+        float percent = (float)(percentage / 100.0f);
+		int buffer = (int)(screenSize.height - (screenSize.height * percent));
+		
+    	int x = (screenSize.width - _width);
+        int y = (buffer / 2);
+        
+        _self.setLocation(x, y);
+        _self.repaint();
+	}
+
+	/**
      * helper method to modularize initialization code out a bit
      */
     private void initializeSelf() {
@@ -85,7 +117,12 @@ public class BorderlessWindow extends JWindow {
         this.setEnabled(true);
         this.setFocusableWindowState(true);
         this.setSize(_width, screenSize.height - buffer);
-        int x = (screenSize.width - _width);
+        
+        int x = 0;
+        if (Settings.get("pinRight").equals("true")) {
+        	x = (screenSize.width - _width);
+        }
+        
         int y = (buffer / 2);
         this.setLocation(x, y);
         startOnTopper();

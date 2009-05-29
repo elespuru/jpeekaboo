@@ -65,15 +65,13 @@ public class SettingsDialog extends JDialog {
 		
 		pinLeft.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent evt) {
-        		Settings.put("pinLeft","true");
-        		Settings.put("pinRight","false");
+        		BorderlessWindow.pinLeft();
           	}
         });
 
 		pinRight.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent evt) {
-        		Settings.put("pinLeft","false");
-        		Settings.put("pinRight","true");
+        		BorderlessWindow.pinRight();
           	}
         });
 
@@ -84,11 +82,10 @@ public class SettingsDialog extends JDialog {
 
 		//vertical percentage of screen to use 0-100%
         int defaultVertPerc = Integer.valueOf(Settings.get("verticalPercentage"));
-		final JSlider verticalPercentage = new JSlider(JSlider.HORIZONTAL,0,100,defaultVertPerc);
+		final JSlider verticalPercentage = new JSlider(JSlider.HORIZONTAL,20,100,defaultVertPerc);
 		verticalPercentage.setMajorTickSpacing(20);
 		verticalPercentage.setPaintTicks(true);
 		Hashtable<Integer, JLabel> labels = new Hashtable<Integer,JLabel>();
-		labels.put(new Integer(0), new JLabel("0%"));
 		labels.put(new Integer(20), new JLabel("20%"));
 		labels.put(new Integer(40), new JLabel("40%"));
 		labels.put(new Integer(60), new JLabel("60%"));

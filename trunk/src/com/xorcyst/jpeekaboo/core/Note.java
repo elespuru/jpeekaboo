@@ -140,7 +140,7 @@ public class Note {
 	private void restoreContent() {
 		
 		try {
-        	File saveFile = new File(System.getProperty("user.home"), ".jpeekaboo" + ".save" );
+        	File saveFile = new File(Settings.get("savedContent"));
 			BufferedReader input = new BufferedReader(new FileReader(saveFile));
 			StringBuffer restore = new StringBuffer();
 		
@@ -166,7 +166,7 @@ public class Note {
 	public void saveContent() {
 	    
 		try {
-        	File saveFile = new File(System.getProperty("user.home"), ".jpeekaboo" + ".save" );
+        	File saveFile = new File(Settings.get("savedContent"));
 			BufferedWriter output = new BufferedWriter(new FileWriter(saveFile));
 			output.write(_note.getText());
 			output.flush();

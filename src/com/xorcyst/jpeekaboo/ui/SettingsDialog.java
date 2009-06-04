@@ -57,7 +57,14 @@ public class SettingsDialog extends JDialog {
 
 		JRadioButton pinLeft = new JRadioButton("Pin to left side of screen");
 		JRadioButton pinRight = new JRadioButton("Pin to right side of screen");
-		pinRight.setSelected(true);
+		
+		if(Settings.get("pinLeft").equals("true")) {
+			pinLeft.setSelected(true);
+		} else if (Settings.get("pinRight").equals("true")) {
+			pinRight.setSelected(true);
+		} else {
+			pinRight.setSelected(true);
+		}
 		
 		ButtonGroup pinButtonGroup = new ButtonGroup();
 		pinButtonGroup.add(pinLeft);

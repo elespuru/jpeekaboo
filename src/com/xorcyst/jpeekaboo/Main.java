@@ -1,5 +1,5 @@
 // jpeekaboo - auto hide note thing
-// Copyright 2008 by Peter R. Elespuru
+// Copyright 2009 by Peter R. Elespuru
 // All Rights Reserved.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 package com.xorcyst.jpeekaboo;
 
 import javax.swing.*;
+import java.io.*;
 import com.xorcyst.jpeekaboo.core.*;
 import com.xorcyst.jpeekaboo.persistence.*;
 
@@ -34,6 +35,8 @@ public class Main {
             public void run() {
 
                 if (new StateLock("jpeekaboo").isAppActive()) {
+					System.out.println("Application is currently locked. Manually remove " + 
+						System.getProperty("user.home") + File.separator + ".jpeekaboo.lock");
                     return;
                 }
 

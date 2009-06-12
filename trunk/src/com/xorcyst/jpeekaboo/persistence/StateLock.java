@@ -20,6 +20,8 @@ package com.xorcyst.jpeekaboo.persistence;
 
 import java.io.*;
 import java.nio.channels.*;
+import com.xorcyst.jpeekaboo.core.Settings;
+import java.io.*;
 
 /**
  * The StateLock class modularizes a user home directory based lock
@@ -48,7 +50,7 @@ public class StateLock {
      */
     public boolean isAppActive() {
         try {
-            file = new File(System.getProperty("user.home"), "." + appName + ".lock" );
+        	file = new File(Settings.get("stateLock"));
             channel = new RandomAccessFile(file, "rw").getChannel();
 
             try {

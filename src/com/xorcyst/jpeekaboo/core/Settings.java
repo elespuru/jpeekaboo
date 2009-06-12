@@ -39,6 +39,7 @@ public class Settings {
 	static {
 		
 		//defaults
+		_settings.setProperty("stateLock",System.getProperty("user.home")+File.separator+".jpeekaboo"+File.separator+"lock");
 		_settings.setProperty("pinLeft","false");
 		_settings.setProperty("pinRight","true");
 		_settings.setProperty("verticalPercentage","60");

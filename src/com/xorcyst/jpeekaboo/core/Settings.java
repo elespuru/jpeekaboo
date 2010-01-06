@@ -30,59 +30,76 @@ import java.io.*;
 //
 
 public class Settings {
-	
+
 	private static final Properties _settings = new Properties();
-    
+
 	//
-	// initial/default settings 
+	// initial/default settings
 	// 
 	static {
+
+		// defaults
+		String osName = System.getProperty("os.name").toLowerCase();
+		System.out.println("OSNAME:"+osName);
+
+		if (osName.startsWith("windows")) {
+			_settings.setProperty("app.dir", System.getProperty("user.home")
+					+ File.separator + "jpeekaboo");
+		} else {
+			_settings.setProperty("app.dir", System.getProperty("user.home")
+					+ File.separator + ".jpeekaboo");
+		}
 		
-		//defaults
-		_settings.setProperty("stateLock",System.getProperty("user.home")+File.separator+".jpeekaboo"+File.separator+"lock");
-		_settings.setProperty("pinLeft","false");
-		_settings.setProperty("pinRight","true");
-		_settings.setProperty("verticalPercentage","60");
-		_settings.setProperty("savedContent",System.getProperty("user.home")+File.separator+".jpeekaboo"+File.separator+"content.txt");
-		_settings.setProperty("savedSettings",System.getProperty("user.home")+File.separator+".jpeekaboo"+File.separator+"settings.properties");
+		new File(_settings.getProperty("app.dir")).mkdir();
 		
-		//overrides
+		_settings.setProperty("stateLock", _settings.getProperty("app.dir") + File.separator + "lock");
+		_settings.setProperty("pinLeft", "false");
+		_settings.setProperty("pinRight", "true");
+		_settings.setProperty("verticalPercentage", "60");
+		_settings.setProperty("savedContent", _settings.getProperty("app.dir") + File.separator	+ "content.txt");
+		_settings.setProperty("savedSettings", _settings.getProperty("app.dir") + File.separator + "settings.properties");
+
+		// overrides
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(_settings.getProperty("savedSettings")));
-			
+
 			Enumeration pie = properties.propertyNames();
-			
-			while(pie.hasMoreElements()) {
-				String key = (String)pie.nextElement();
-				if(_settings.getProperty(key) != null) {
+
+			while (pie.hasMoreElements()) {
+				String key = (String) pie.nextElement();
+				
+				if (_settings.getProperty(key) != null) {
 					_settings.setProperty(key, properties.getProperty(key));
 				}
 			}
-		} catch(Exception ignore) { } //defaults will just be used
+		} catch (Exception ignore) {
+		} // defaults will just be used
 	}
-	
+
 	/**
 	 * @param name
 	 * @return
 	 */
-    public static String get(String name) {
-    	return(_settings.getProperty(name));
-    }
+	public static String get(String name) {
+		return (_settings.getProperty(name));
+	}
 
-    /**
-     * @param name
-     * @param value
-     */
-    public static void put(String name, String value) {
-    	_settings.setProperty(name, value);
+	/**
+	 * @param name
+	 * @param value
+	 */
+	public static void put(String name, String value) {
+		_settings.setProperty(name, value);
 		saveSettings();
-    }
+	}
 
 	private static void saveSettings() {
-	    
+
 		try {
-        	_settings.store(new FileOutputStream(_settings.getProperty("savedSettings")), "");
-		} catch(IOException ignore) { } //can't do anything about it anyway...
+			_settings.store(new FileOutputStream(_settings
+					.getProperty("savedSettings")), "");
+		} catch (IOException ignore) {
+		} // can't do anything about it anyway...
 	}
 }
